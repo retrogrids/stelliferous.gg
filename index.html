@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=0.5, user-scalable=no">
     <title>stelliferous</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yesteryear&display=auto">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
-        body { margin: 0; overflow: hidden; background: #000000; font-family: 'Yesteryear', sans-serif; touch-action: none; }
-        #ui { position: absolute; top: 20px; left: 20px; color: white; pointer-events: none; z-index: 10; display: none; }
-        .score-container { font-size: 24px; font-weight: bold; color: #00ffaa; text-shadow: 0 0 10px rgba(0,255,170,0.8); }
-        .ai-score { color: #000; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-        #footer {
-            position:fixed; bottom:0px; width:100%; display:flex;
-            font-size:40px;
-            color:#DDDDDD;
-            text-shadow:0 0 3px #888888, 0 0 8px #DDDDDD;
-            z-index: 100;
-        }
-        #footer > div:nth-child(1) { flex:1; padding:20px 32px 10px 32px; font-size:50px; }
-        #footer > div:nth-child(2) { padding:38px 42px 25px 32px; text-align:right; font-size:30px; }
-        .noselect {
-            -webkit-touch-callout:none; -webkit-user-select:none; -khtml-user-select:none;
-            -moz-user-select:none; -ms-user-select:none; user-select:none;
-        }
-        #hud-stelliferous { text-shadow:0 0 5px #FFFFFF, 0 0 3px #FFFFFF; }
-        #hud-stelliferous-count { color:#edba2d; text-shadow:0 0 5px #FFFFFF, 0 0 3px #FFFFFF; }
-        .hud-button { display:inline-block; width:30px; padding-left:4px; text-align:left; cursor:pointer; }
-        .hud-button > a > i { color:#DDDDDD; }
-        .hud-button:hover > a > i { color:#FFFFFF; }
-        .hud-button:hover > i { color:#FFFFFF; }
-        .hud-button-disabled { opacity:0.3; cursor:default !important; }
-        #hud-button-discord { padding-left:32px; }
-        .hud-button-hint-pulse {
-            color:#d4ae46;
-            animation:hud-button-hint-pulse-animation 1.5s ease-in-out infinite alternate;
-        }
-        @keyframes hud-button-hint-pulse-animation {
-            from { text-shadow:0 0 5px #000000; color:#c9c8c7; }
-            to { text-shadow:0 0 20px #c9c8c7, 0 0 30px #FFFFFF; color:#c9c8c7; }
-        }
-        canvas { display: block; }
+      body { margin:0; overflow:hidden; background:#000000; font-family:'Yesteryear',sans-serif; touch-action:none; }
+      #ui { position:absolute; top:20px; left:20px; color:white; pointer-events:none; z-index:10; display:none; }
+      .score-container { font-size:24px; font-weight:bold; color:#00ffaa; text-shadow:0 0 10px rgba(0,255,170,0.8); }
+      .ai-score { color:#000; text-shadow:0 0 10px rgba(255,255,255,0.3); }
+      #footer {
+        position:fixed; bottom:0px; width:100%; display:flex;
+        font-size:40px;
+        color:#DDDDDD;
+        text-shadow:0 0 3px #888888, 0 0 8px #DDDDDD;
+        z-index:100;
+      }
+      #footer > div:nth-child(1) { flex:1; padding:20px 32px 10px 32px; font-size:50px; }
+      #footer > div:nth-child(2) { padding:38px 42px 25px 32px; text-align:right; font-size:30px; }
+      .noselect {
+        -webkit-touch-callout:none; /* iOS Safari */
+          -webkit-user-select:none; /* Safari */
+           -khtml-user-select:none; /* Konqueror HTML */
+             -moz-user-select:none; /* Old versions of Firefox */
+              -ms-user-select:none; /* Internet Explorer/Edge */
+                  user-select:none; /* Non-prefixed version, currently
+                                       supported by Chrome, Edge, Opera and Firefox */
+      }
+      #hud-stelliferous { text-shadow:0 0 5px #FFFFFF, 0 0 3px #FFFFFF; }
+      #hud-stelliferous-count { color:#edba2d; text-shadow:0 0 5px #FFFFFF, 0 0 3px #FFFFFF; }
+      .hud-button { display:inline-block; width:30px; padding-left:4px; text-align:left; cursor:pointer; }
+      .hud-button > a > i { color:#DDDDDD; }
+      .hud-button:hover > a > i { color:#FFFFFF; }
+      .hud-button:hover > i { color:#FFFFFF; }
+      .hud-button-disabled { opacity:0.3; cursor:default !important; }
+      #hud-button-discord { padding-left:32px; }
+      .hud-button-hint-pulse {
+        color:#d4ae46;
+        animation:hud-button-hint-pulse-animation 1.5s ease-in-out infinite alternate;
+      }
+      @keyframes hud-button-hint-pulse-animation {
+        from { text-shadow:0 0 5px #000000; color:#c9c8c7; }
+        to { text-shadow:0 0 20px #c9c8c7, 0 0 30px #FFFFFF; color:#c9c8c7; }
+      }
+      canvas { display: block; }
     </style>
     <script>
       var favIcon = "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";
@@ -53,19 +58,19 @@
     </script>
     <script type="importmap">
     {
-        "imports": {
-            "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
-        }
+      "imports": {
+        "three": "https://unpkg.com/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.180.0/examples/jsm/"
+      }
     }
     </script>
   <script type="module" crossorigin src="./app.js"></script>
 </head>
 <body>
     <div id="footer" class="noselect">
-        <div><span id="hud-stelliferous">stelliferous</span> <span id="hud-stelliferous-count"></span></div>
-        <div>
-        </div>
+      <div><span id="hud-stelliferous">stelliferous</span> <span id="hud-stelliferous-count"></span></div>
+      <div>
+      </div>
     </div>
 
     
